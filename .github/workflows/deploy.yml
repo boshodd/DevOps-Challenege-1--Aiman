@@ -22,11 +22,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: SSH and remove previous app
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_IP }} "rm -rf /home/ec2-user/app"
-
-
       - name: Set up SSH access
         run: |
           mkdir -p ~/.ssh
@@ -36,6 +31,8 @@ jobs:
 
       - name: Deploy to EC2
         run: |
+          ls
+          ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_IP }} "rm -rf /home/ec2-user/app"
           scp -i ~/.ssh/id_rsa -r . ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/app
           ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_IP }} << 'EOF'
             cd /home/ec2-user/app
